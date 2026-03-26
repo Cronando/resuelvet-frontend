@@ -1,0 +1,59 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metric {
+  padding: 1rem;
+}
+
+.metric p {
+  color: #506476;
+}
+
+.metric h2 {
+  margin-top: 0.4rem;
+  font-size: 2rem;
+}
+
+.recent {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.recent header p {
+  margin-top: 0.25rem;
+  color: #506476;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid #d4e3eb;
+}
+
+.row p {
+  color: #506476;
+  margin-top: 0.2rem;
+}
+
+.row span {
+  background: #eef5f8;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.loading {
+  padding: 1rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

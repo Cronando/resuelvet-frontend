@@ -1,0 +1,240 @@
+<section class="tickets-layout" *ngIf="!loading; else loadingState">
+  <article class="panel form-panel">
+    <h2>Nuevo ticket</h2>
+    <p *ngIf="canManageWorkflow; else requesterHelp">
+      Crea solicitudes con prioridad, estado inicial y usuario asignado opcional.
+    </p>
+    <ng-template #requesterHelp>
+      <p>Tus tickets se crean con estado abierto y sin asignacion inicial.</p>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="createTicket()" class="ticket-form">
+      <label for="title">Titulo</label>
+      <input id="title" class="form-control" formControlName="title" placeholder="Ej. Error al iniciar sesion" />
+
+      <label for="description">Descripcion</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+        rows="4"
+        placeholder="Describe el problema en detalle"
+      ></textarea>
+
+      <div class="grid-fields">
+        <div>
+          <label for="category">Categoria</label>
+          <select id="category" class="form-control" formControlName="idTicketCat">
+            <option *ngFor="let category of categories" [ngValue]="category.idTicketCat">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label for="priority">Prioridad</label>
+          <select id="priority" class="form-control" formControlName="idTicketPrio">
+            <option *ngFor="let priority of priorities" [ngValue]="priority.idTicketPrio">
+              {{ priority.name }}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="canSelectInitialStatus">
+          <label for="status">Estado</label>
+          <select id="status" class="form-control" formControlName="idTicketStat">
+            <option *ngFor="let status of availableCreationStatuses" [ngValue]="status.idTicketStat">
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="canAssignUsers">
+        <label for="assigned">Asignado a (opcional)</label>
+        <select id="assigned" class="form-control" formControlName="idUserAsig">
+          <option [ngValue]="null">Sin asignar</option>
+          <option *ngFor="let user of assignableUsers" [ngValue]="user.idUser">
+            {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
+          </option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="creating">
+        {{ creating ? 'Guardando...' : 'Crear ticket' }}
+      </button>
+    </form>
+  </article>
+
+  <article class="panel list-panel">
+    <div class="list-header-stack">
+      <div class="section-heading">
+        <h2>Tickets</h2>
+        <span class="scope-chip" *ngIf="isRequester">Vista limitada a tus tickets</span>
+      </div>
+
+      <div class="filters-grid">
+        <input
+          class="form-control"
+          [(ngModel)]="searchTerm"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="Buscar por titulo o descripcion"
+        />
+
+        <select class="form-control" [(ngModel)]="filterStatus" [ngModelOptions]="{ standalone: true }">
+          <option value="">Todos los estados</option>
+          <option *ngFor="let status of statuses" [value]="status.idTicketStat">{{ status.name }}</option>
+        </select>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterPriority"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <option value="">Todas las prioridades</option>
+          <option *ngFor="let priority of priorities" [value]="priority.idTicketPrio">
+            {{ priority.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Titulo</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Fecha creacion</th>
+            <th>Asignado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ticket of filteredTickets">
+            <td>
+              <strong>{{ ticket.title }}</strong>
+              <div class="ticket-no">{{ ticket.ticketNo }}</div>
+            </td>
+            <td>{{ ticket.status?.name || '-' }}</td>
+            <td>{{ ticket.priority?.name || '-' }}</td>
+            <td>{{ formatDate(ticket.dateCreated) }}</td>
+            <td>{{ getAssignedUser(ticket) }}</td>
+            <td>
+              <div class="actions">
+                <button type="button" class="btn btn-outline" (click)="viewTicketDetails(ticket)">Detalle</button>
+
+                <select
+                  *ngIf="canManageWorkflow"
+                  class="form-control compact"
+                  [ngModel]="ticket.idTicketStat"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="changeStatus(ticket, +$event)"
+                >
+                  <option *ngFor="let status of statuses" [ngValue]="status.idTicketStat">
+                    {{ status.name }}
+                  </option>
+                </select>
+
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  *ngIf="canManageWorkflow && getStatusIdByCode('IN_PROGRESS') as inProgressId"
+                  [disabled]="!canTransition(ticket, 'IN_PROGRESS') || updatingStatus"
+                  (click)="changeStatus(ticket, inProgressId)"
+                >
+                  Start
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  *ngIf="canManageWorkflow && getStatusIdByCode('RESOLVED') as resolvedId"
+                  [disabled]="!canTransition(ticket, 'RESOLVED') || updatingStatus"
+                  (click)="changeStatus(ticket, resolvedId)"
+                >
+                  Resolve
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  *ngIf="canManageWorkflow && getStatusIdByCode('CLOSED') as closedId"
+                  [disabled]="!canTransition(ticket, 'CLOSED') || updatingStatus"
+                  (click)="changeStatus(ticket, closedId)"
+                >
+                  Close
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty" *ngIf="!filteredTickets.length">No hay resultados para el filtro actual.</div>
+    </div>
+
+    <div class="alert" *ngIf="error">{{ error }}</div>
+  </article>
+</section>
+
+<div class="detail-modal-backdrop" *ngIf="selectedTicket" (click)="closeTicketDetails()">
+  <section class="detail-modal" role="dialog" aria-modal="true" aria-label="Detalle del ticket" (click)="$event.stopPropagation()">
+    <div class="detail-modal-header">
+      <h3>Detalle del ticket</h3>
+      <button type="button" class="btn btn-outline" (click)="closeTicketDetails()">Cerrar</button>
+    </div>
+
+    <p *ngIf="loadingDetail">Cargando detalle...</p>
+
+    <div *ngIf="!loadingDetail && selectedTicket" class="detail-grid">
+      <div>
+        <strong>Ticket</strong>
+        <p>{{ selectedTicket.ticketNo }}</p>
+      </div>
+      <div>
+        <strong>Titulo</strong>
+        <p>{{ selectedTicket.title }}</p>
+      </div>
+      <div>
+        <strong>Descripcion</strong>
+        <p>{{ selectedTicket.description }}</p>
+      </div>
+      <div>
+        <strong>Estado</strong>
+        <p>{{ selectedTicket.status?.name || '-' }}</p>
+      </div>
+      <div>
+        <strong>Prioridad</strong>
+        <p>{{ selectedTicket.priority?.name || '-' }}</p>
+      </div>
+      <div>
+        <strong>Categoria</strong>
+        <p>{{ selectedTicket.category?.name || '-' }}</p>
+      </div>
+      <div>
+        <strong>Solicitante</strong>
+        <p>{{ selectedTicket.userRequested?.username || '-' }}</p>
+      </div>
+      <div>
+        <strong>Asignado</strong>
+        <p>{{ getAssignedUser(selectedTicket) }}</p>
+      </div>
+      <div>
+        <strong>Creado</strong>
+        <p>{{ formatDate(selectedTicket.dateCreated) }}</p>
+      </div>
+      <div>
+        <strong>Actualizado</strong>
+        <p>{{ formatDate(selectedTicket.dateUpdated) }}</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<ng-template #loadingState>
+  <section class="panel loading">
+    <p>Cargando tickets...</p>
+  </section>
+</ng-template>

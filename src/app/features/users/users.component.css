@@ -1,0 +1,158 @@
+.users-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 360px 1fr;
+}
+
+.create-panel,
+.list-panel,
+.edit-modal {
+  padding: 1rem;
+}
+
+.create-panel p,
+.list-panel p,
+.edit-modal p,
+.meta {
+  color: #506476;
+}
+
+.user-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.section-heading,
+.edit-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.edit-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 26, 39, 0.52);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.edit-modal {
+  width: min(720px, 100%);
+  max-height: 88vh;
+  overflow: auto;
+  background: #f9fcff;
+  border: 1px solid #d4e3eb;
+  border-radius: 12px;
+  box-shadow: 0 18px 42px rgba(10, 34, 52, 0.28);
+}
+
+.scope-chip {
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  background: #eef5f8;
+  color: #264153;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  vertical-align: top;
+  text-align: left;
+  padding: 0.7rem 0.45rem;
+  border-bottom: 1px solid #d4e3eb;
+}
+
+th {
+  color: #506476;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  background: #e7f6ee;
+  color: #14613b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.status-pill.inactive {
+  background: #fbe8e8;
+  color: #8f2f2f;
+}
+
+.btn-danger {
+  border: 1px solid #e2b4b4;
+  background: #fff6f6;
+  color: #8f2f2f;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+}
+
+.success {
+  color: #14613b;
+  background: #eef9f1;
+  border-color: #bfe1c9;
+}
+
+.empty,
+.loading {
+  padding: 1rem 0;
+}
+
+@media (max-width: 1100px) {
+  .users-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading,
+  .edit-header {
+    flex-direction: column;
+  }
+
+  .edit-modal {
+    max-height: 92vh;
+    padding: 0.85rem;
+  }
+}

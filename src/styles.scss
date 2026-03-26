@@ -1,0 +1,96 @@
+:root {
+	--bg-main: #f4f7f9;
+	--bg-panel: #ffffff;
+	--bg-soft: #eef5f8;
+	--text-main: #112131;
+	--text-muted: #506476;
+	--line: #d4e3eb;
+	--primary: #1c8cb3;
+	--primary-strong: #156f8f;
+	--accent: #ffbf57;
+	--danger: #be3e3e;
+	--radius-md: 0.8rem;
+	--radius-lg: 1rem;
+	--shadow-soft: 0 10px 35px rgba(11, 36, 54, 0.08);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	min-height: 100%;
+	background:
+		radial-gradient(circle at 8% 20%, rgba(146, 214, 228, 0.35), transparent 34%),
+		radial-gradient(circle at 90% 0%, rgba(255, 205, 122, 0.3), transparent 32%),
+		var(--bg-main);
+	color: var(--text-main);
+	font-family: 'Manrope', 'Segoe UI', sans-serif;
+}
+
+h1,
+h2,
+h3,
+p {
+	margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+.panel {
+	background: var(--bg-panel);
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--line);
+	box-shadow: var(--shadow-soft);
+}
+
+.btn {
+	border: 0;
+	border-radius: 0.65rem;
+	padding: 0.55rem 0.95rem;
+	cursor: pointer;
+	font-weight: 600;
+}
+
+.btn-primary {
+	color: #ffffff;
+	background: var(--primary);
+}
+
+.btn-primary:hover {
+	background: var(--primary-strong);
+}
+
+.btn-ghost {
+	color: var(--text-main);
+	background: var(--bg-soft);
+}
+
+.form-control {
+	width: 100%;
+	border: 1px solid var(--line);
+	border-radius: var(--radius-md);
+	padding: 0.6rem 0.7rem;
+	outline: none;
+	background: #ffffff;
+}
+
+.form-control:focus {
+	border-color: var(--primary);
+}
+
+.alert {
+	margin-top: 0.8rem;
+	background: #ffe9e9;
+	color: #922b2b;
+	border: 1px solid #f6c9c9;
+	border-radius: 0.7rem;
+	padding: 0.75rem;
+}

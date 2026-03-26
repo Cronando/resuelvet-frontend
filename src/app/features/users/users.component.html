@@ -1,0 +1,155 @@
+<section class="users-layout" *ngIf="!loading; else loadingState">
+  <article class="panel create-panel">
+    <h2>Crear usuario</h2>
+    <p>Alta de cuentas internas y solicitantes desde la consola de administracion.</p>
+
+    <form [formGroup]="createForm" (ngSubmit)="createUser()" class="user-form">
+      <div class="grid-2">
+        <div>
+          <label for="firstName">Nombre</label>
+          <input id="firstName" class="form-control" formControlName="firstName" />
+        </div>
+        <div>
+          <label for="lastName">Apellido</label>
+          <input id="lastName" class="form-control" formControlName="lastName" />
+        </div>
+      </div>
+
+      <label for="email">Correo</label>
+      <input id="email" class="form-control" formControlName="email" type="email" />
+
+      <div class="grid-2">
+        <div>
+          <label for="username">Usuario</label>
+          <input id="username" class="form-control" formControlName="username" />
+        </div>
+        <div>
+          <label for="password">Contrasena</label>
+          <input id="password" class="form-control" formControlName="password" type="password" />
+        </div>
+      </div>
+
+      <label for="roleId">Rol</label>
+      <select id="roleId" class="form-control" formControlName="roleId">
+        <option *ngFor="let role of roles" [ngValue]="role.idRole">{{ role.name }}</option>
+      </select>
+
+      <button class="btn btn-primary" type="submit" [disabled]="savingCreate">
+        {{ savingCreate ? 'Guardando...' : 'Crear usuario' }}
+      </button>
+    </form>
+  </article>
+
+  <article class="panel list-panel">
+    <div class="section-heading">
+      <div>
+        <h2>Usuarios</h2>
+        <p>Administra rol, estado y datos principales de las cuentas.</p>
+      </div>
+      <span class="scope-chip">Solo administradores</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Creado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>
+              <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+              <div class="meta">{{ user.username }} · {{ user.email }}</div>
+            </td>
+            <td>{{ getRoleName(user) }}</td>
+            <td>
+              <span class="status-pill" [class.inactive]="!user.active">
+                {{ user.active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>{{ formatDate(user.dateCreated) }}</td>
+            <td>
+              <div class="actions">
+                <button type="button" class="btn btn-outline" (click)="selectUser(user)">Editar</button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  [disabled]="deletingUserId === user.idUser || currentAdminId === user.idUser"
+                  (click)="deleteUser(user)"
+                >
+                  {{ deletingUserId === user.idUser ? 'Eliminando...' : 'Eliminar' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty" *ngIf="!users.length">No hay usuarios cargados.</div>
+    </div>
+
+    <div class="alert success" *ngIf="success">{{ success }}</div>
+    <div class="alert" *ngIf="error">{{ error }}</div>
+  </article>
+</section>
+
+<div class="edit-modal-backdrop" *ngIf="selectedUser && !loading" (click)="closeEditor()">
+  <section class="panel edit-modal" role="dialog" aria-modal="true" aria-label="Editar usuario" (click)="$event.stopPropagation()">
+    <div class="edit-header">
+      <div>
+        <h3>Editar usuario</h3>
+        <p>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</p>
+      </div>
+      <button type="button" class="btn btn-outline" (click)="closeEditor()">Cerrar</button>
+    </div>
+
+    <form [formGroup]="editForm" (ngSubmit)="saveSelectedUser()" class="user-form">
+      <div class="grid-2">
+        <div>
+          <label for="editFirstName">Nombre</label>
+          <input id="editFirstName" class="form-control" formControlName="firstName" />
+        </div>
+        <div>
+          <label for="editLastName">Apellido</label>
+          <input id="editLastName" class="form-control" formControlName="lastName" />
+        </div>
+      </div>
+
+      <label for="editEmail">Correo</label>
+      <input id="editEmail" class="form-control" formControlName="email" type="email" />
+
+      <div class="grid-2">
+        <div>
+          <label for="editUsername">Usuario</label>
+          <input id="editUsername" class="form-control" formControlName="username" />
+        </div>
+        <div>
+          <label for="editRole">Rol</label>
+          <select id="editRole" class="form-control" formControlName="idRole">
+            <option *ngFor="let role of roles" [ngValue]="role.idRole">{{ role.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" formControlName="active" />
+        <span>Usuario activo</span>
+      </label>
+
+      <button class="btn btn-primary" type="submit" [disabled]="savingEdit || !canEditSelectedUser">
+        {{ savingEdit ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </form>
+  </section>
+</div>
+
+<ng-template #loadingState>
+  <section class="panel loading">
+    <p>Cargando usuarios...</p>
+  </section>
+</ng-template>

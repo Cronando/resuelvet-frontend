@@ -1,0 +1,42 @@
+<section class="dashboard-grid" *ngIf="!loading; else loadingState">
+  <article class="metric panel">
+    <p>Total</p>
+    <h2>{{ totalTickets }}</h2>
+  </article>
+
+  <article class="metric panel">
+    <p>Abiertos</p>
+    <h2>{{ openTickets }}</h2>
+  </article>
+
+  <article class="metric panel">
+    <p>Cerrados</p>
+    <h2>{{ closedTickets }}</h2>
+  </article>
+</section>
+
+<section class="panel recent" *ngIf="!loading">
+  <header>
+    <h3>{{ isRequesterView ? 'Tus tickets recientes' : 'Tickets recientes' }}</h3>
+    <p>{{ isRequesterView ? 'Solo se muestran los tickets que solicitaste.' : 'Los ultimos movimientos del sistema.' }}</p>
+  </header>
+
+  <div class="row" *ngFor="let ticket of recentTickets">
+    <div>
+      <strong>{{ ticket.ticketNo }}</strong>
+      <p>{{ ticket.title }}</p>
+    </div>
+    <span>{{ ticket.status?.name || 'Sin estado' }}</span>
+  </div>
+
+  <div class="alert" *ngIf="!recentTickets.length && !error">
+    Aun no hay tickets cargados.
+  </div>
+  <div class="alert" *ngIf="error">{{ error }}</div>
+</section>
+
+<ng-template #loadingState>
+  <section class="panel loading">
+    <p>Cargando dashboard...</p>
+  </section>
+</ng-template>

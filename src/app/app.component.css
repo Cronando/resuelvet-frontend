@@ -1,0 +1,90 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  background: rgba(12, 30, 45, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(145, 189, 208, 0.2);
+}
+
+.brand {
+  font-weight: 700;
+  color: #f3fbff;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.menu {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.menu a {
+  color: #b9d9e9;
+  text-decoration: none;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.55rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.menu a:hover,
+.menu a.active {
+  color: #ffffff;
+  background-color: rgba(115, 181, 211, 0.26);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.role-chip {
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  color: #f3fbff;
+  background: rgba(115, 181, 211, 0.26);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.user {
+  color: #d8eef7;
+  font-size: 0.9rem;
+}
+
+.btn-logout {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  color: #092336;
+  background: #ffd37c;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.content {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 1.5rem auto;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    flex-wrap: wrap;
+    padding: 0.85rem 1rem;
+  }
+
+  .content {
+    width: calc(100% - 1.2rem);
+    margin-top: 1rem;
+  }
+}

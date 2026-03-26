@@ -1,0 +1,21 @@
+<div class="app-shell">
+  <header class="topbar" *ngIf="auth.isLoggedIn">
+    <a routerLink="/dashboard" class="brand">ResuelveT</a>
+
+    <nav class="menu">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/tickets" routerLinkActive="active">Tickets</a>
+      <a *ngIf="auth.isAdmin" routerLink="/users" routerLinkActive="active">Usuarios</a>
+    </nav>
+
+    <div class="actions">
+      <span class="role-chip">{{ currentRoleLabel }}</span>
+      <span class="user">{{ currentUserLabel }}</span>
+      <button class="btn-logout" (click)="logout()">Cerrar sesion</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
