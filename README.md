@@ -168,6 +168,26 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
+## Available Users
+
+When using the seeded database, the following test users are available for authentication:
+
+| Username | Password | Role | Email |
+|----------|----------|------|-------|
+| lreza | Resuelvet123 | ADMIN | luis@resuelvet.com |
+| alopez | Resuelvet123 | AGENT | ana@resuelvet.com |
+| cmendez | Resuelvet123 | AGENT | carlos@resuelvet.com |
+| mgarcia | Resuelvet123 | REQUESTER | maria@resuelvet.com |
+| jperez | Resuelvet123 | REQUESTER | juan@resuelvet.com |
+
+**Note:** These are development credentials for testing purposes only. Change passwords and create new users for production environments.
+
+### User Roles
+
+- **ADMIN** - Full system access and user management
+- **AGENT** - Can manage tickets and handle support requests
+- **REQUESTER** - Can create and view their own tickets
+
 ## Contributing
 
 For local development, use the Angular development server for hot-reload capabilities during testing.
