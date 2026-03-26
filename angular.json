@@ -2,51 +2,6 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "projects": {
-    "citas-medicas": {
-      "projectType": "application",
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/citas-medicas",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"]
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "buildOptimizer": false,
-              "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": { "browserTarget": "citas-medicas:build:production" },
-            "development": { "browserTarget": "citas-medicas:build:development" }
-          },
-          "defaultConfiguration": "development"
-        }
-      }
-    }
-  }
-}
-
-{
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "projects": {
     "resuelvet-tickets": {
       "projectType": "application",
       "root": "",
